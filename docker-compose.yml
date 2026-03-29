@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # 应用服务 - 符合现有基础设施规范
+  devops-demo:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: devops-demo-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    networks:
+      - edge              # 使用统一入口网络
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    labels:
+      # Traefik 统一入口配置
+      - "traefik.enable=true"
+      - "traefik.http.routers.devops-demo.rule=Host(`devops.smalldong.top`)"
+      - "traefik.http.routers.devops-demo.entrypoints=websecure"
+      - "traefik.http.routers.devops-demo.tls=true"
+      - "traefik.http.services.devops-demo.loadbalancer.server.port=8080"
+      # Prometheus 自动发现标签
+      - "prometheus.enable=true"
+      - "prometheus.port=8080"
+      - "prometheus.path=/metrics"
+      - "com.github.action.description=DevOps Demo Application (符合规范)"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  edge:
+    external: true  # 连接到现有的 edge 网络
