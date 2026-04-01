@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Gitea Webhook 自动化服务
+  automation-webhook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: devops-demo-automation
+    restart: unless-stopped
+    # 使用 host 网络模式，以便直接监听 9876 并访问宿主机工具链
+    network_mode: host
+    # 将 PicoClaw 的 Workspace 挂载进容器，保持路径一致
+    volumes:
+      - /root/.picoclaw:/root/.picoclaw
+      - /root/.picoclaw/workspace/projects/devops-demo/logs:/root/.picoclaw/workspace/projects/devops-demo/logs
+      - /root/.picoclaw/workspace/projects/devops-demo/state:/root/.picoclaw/workspace/projects/devops-demo/state
+    # 环境变量由 config.env 提供
+    env_file:
+      - config.env
+    environment:
+      - WEBHOOK_HOST=0.0.0.0
+      - WEBHOOK_PORT=9876
+      # 确保容器内能找到 modelctl (通常在 /root/.picoclaw/modelctl)
+      - PATH=/usr/local/bin:/usr/bin:/bin:/root/.picoclaw
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

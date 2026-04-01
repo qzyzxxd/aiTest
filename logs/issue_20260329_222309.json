@@ -1,0 +1,6 @@
+{
+  "issue_number": 1,
+  "title": "添加用户认证功能",
+  "body": "需要添加基本的用户登录和注册功能，支持邮箱和密码认证。",
+  "labels": ["type::feature", "priority::high", "scope::backend"]
+}

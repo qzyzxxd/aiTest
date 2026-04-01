@@ -1,0 +1,7 @@
+{
+  "issue_number": 2,
+  "title": "优化用户认证缓存性能",
+  "body": "监控发现用户认证接口响应时间可以进一步优化，建议引入 Redis 缓存。",
+  "labels": ["type::improvement", "priority::medium", "scope::backend"],
+  "source": "monitoring_auto"
+}
