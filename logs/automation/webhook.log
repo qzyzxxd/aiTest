@@ -23,3 +23,260 @@
 [2026-04-01 02:13:12 UTC] 📨 事件: issues
 [2026-04-01 02:13:19 UTC] 📨 事件: issues
 [2026-04-01 02:13:24 UTC] 📨 事件: issues
+[2026-04-01 02:33:14 UTC] 🚀 Webhook 服务已启动: http://0.0.0.0:9876/webhook/gitea
+[2026-04-01 02:33:35 UTC] 🚀 Webhook 服务已启动: http://0.0.0.0:9876/webhook/gitea
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+[2026-04-01 02:33:47 UTC] 📨 事件: issues (Delivery: N/A)
+[2026-04-01 02:33:47 UTC] 📋 Issue #9 (opened): feat: add health check endpoint
+[2026-04-01 02:33:47 UTC] 🤖 Agent 进程已启动 PID=7, 处理 Issue #9
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+[2026-04-01 02:35:04 UTC] 👋 服务已停止
+Traceback (most recent call last):
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 193, in <module>
+    start(daemon=False)
+  File "/root/.picoclaw/workspace/projects/devops-demo/automation-service/webhook-server.py", line 159, in start
+    server = http.server.HTTPServer((host, port), WebhookHandler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+[2026-04-01 02:35:14 UTC] 🚀 Webhook 服务已启动: http://0.0.0.0:9876/webhook/gitea
+[2026-04-01 02:37:23 UTC] 📨 事件: issues (Delivery: N/A)
+[2026-04-01 02:37:23 UTC] 📋 Issue #9 (opened): feat: add health check endpoint
+[2026-04-01 02:37:23 UTC] 🤖 Agent 进程已启动 PID=694256, 处理 Issue #9
+[2026-04-01 02:38:02 UTC] 📨 事件: issues (Delivery: N/A)
+[2026-04-01 02:38:02 UTC] 📋 Issue #9 (opened): feat: add health check endpoint
+[2026-04-01 02:38:02 UTC] 🤖 Agent 进程已启动 PID=695286, 处理 Issue #9
+[2026-04-01 05:14:43 UTC] 👋 服务已停止
+[2026-04-01 05:15:36 UTC] 👋 服务已停止
+[2026-04-01 05:15:49 UTC] 🚀 Webhook 服务已启动: http://0.0.0.0:9876/webhook/gitea
+[2026-04-01 05:16:30 UTC] 🚀 Webhook 服务已启动: http://0.0.0.0:9876/webhook/gitea
+[2026-04-01 05:16:47 UTC] 🚀 Webhook 服务已启动: http://0.0.0.0:9876/webhook/gitea
+[2026-04-01 05:17:04 UTC] 🚀 Webhook 服务已启动: http://0.0.0.0:9876/webhook/gitea
+[2026-04-01 05:17:10 UTC] 👋 服务已停止
+[2026-04-01 05:19:16 UTC] 🚀 Webhook 服务已启动: http://0.0.0.0:9876/webhook/gitea
+[2026-04-01 05:21:07 UTC] 👋 服务已停止
+[2026-04-01 05:21:32 UTC] 🚀 Webhook 服务已启动: http://0.0.0.0:9876/webhook/gitea
