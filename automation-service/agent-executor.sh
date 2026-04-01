@@ -4,7 +4,7 @@ set -euo pipefail
 
 # ─── 环境准备 ───────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 # 加载配置（如果存在）
 if [[ -f "$SCRIPT_DIR/config.env" ]]; then
   source "$SCRIPT_DIR/config.env"
@@ -27,10 +27,13 @@ done
 LOG_DIR="$PROJECT_DIR/logs/automation"
 STATE_DIR="$PROJECT_DIR/state/automation"
 mkdir -p "$LOG_DIR" "$STATE_DIR"
-LOG_FILE="$LOG_DIR/issue-${ISSUE_NUM}.log"
+LOG_FILE="$LOG_DIR/agent-issue-${ISSUE_NUM}.log"
 STATE_FILE="$STATE_DIR/issue-${ISSUE_NUM}.json"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"; }
+
+# 确保能找到 modelctl
+MODEL_BIN=${MODEL_CTL:-/root/.picoclaw/modelctl}
 
 # ─── Step 1: 获取 Issue 信息 (使用 GitHub CLI) ──────────────
 log "📋 获取 GitHub Issue #${ISSUE_NUM} 信息..."
@@ -50,7 +53,7 @@ log "🔍 扫描项目结构..."
 cd "$PROJECT_DIR"
 PROJECT_CONTEXT=$(find . -maxdepth 3 -not -path '*/.*' -not -path './node_modules*' | head -n 50)
 
-# ─── Step 3: 优化 Prompt 并调用 AI ──────────────────────────
+# ─── Step 3: 调用 AI 生成执行计划 ──────────────────────────
 log "🤖 正在由 AI 生成执行计划与代码..."
 
 PROMPT=$(cat <<EOF
@@ -64,17 +67,14 @@ Issue: #${ISSUE_NUM} ${ISSUE_TITLE}
 描述: ${ISSUE_BODY}
 
 [输出要求]
-1. 分析需求，确定需要创建或修改的文件。
-2. 给出具体的分支名称（如 feature/issue-${ISSUE_NUM}-xxx）。
-3. 给出具体的代码变更列表。
-4. 必须输出纯 JSON 格式，结构如下：
+必须输出纯 JSON 格式，结构如下：
 {
-  "branch": "分支名",
-  "summary": "变更摘要",
+  "branch": "feature/issue-${ISSUE_NUM}-health-check",
+  "summary": "add /health endpoint",
   "changes": [
     {
-      "path": "文件路径",
-      "content": "完整的代码内容",
+      "path": "app/src/index.js",
+      "content": "...",
       "method": "overwrite"
     }
   ]
@@ -82,8 +82,8 @@ Issue: #${ISSUE_NUM} ${ISSUE_TITLE}
 EOF
 )
 
-# 调用 modelctl route
-PLAN=$(echo "$PROMPT" | modelctl route "处理 Issue #${ISSUE_NUM}" 2>/dev/null || echo "")
+# 调用 modelctl route (使用绝对路径)
+PLAN=$(echo "$PROMPT" | "$MODEL_BIN" route "处理 Issue #${ISSUE_NUM}" 2>/dev/null || echo "")
 
 if [[ -z "$PLAN" ]] || [[ "$PLAN" != *"{"* ]]; then
   log "❌ AI 未能生成有效的 JSON 计划"
@@ -91,7 +91,7 @@ if [[ -z "$PLAN" ]] || [[ "$PLAN" != *"{"* ]]; then
 fi
 
 # ─── Step 4: 执行变更 ────────────────────────────────────────
-BRANCH=$(echo "$PLAN" | python3 -c "import sys,json; data=json.load(sys.stdin); print(data.get('branch', f'feature/issue-${ISSUE_NUM}'))" 2>/dev/null || echo "feature/issue-${ISSUE_NUM}")
+BRANCH=$(echo "$PLAN" | python3 -c "import sys,json; data=json.loads(sys.stdin.read()); print(data.get('branch', f'feature/issue-${ISSUE_NUM}'))" 2>/dev/null || echo "feature/issue-${ISSUE_NUM}")
 log "🌿 创建分支: $BRANCH"
 
 git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
@@ -122,12 +122,14 @@ git push origin "$BRANCH" --force
 
 # ─── Step 6: 创建 GitHub PR ──────────────────────────────────
 log "🔀 创建 GitHub Pull Request..."
+# 确定 Base 分支 (GitHub 通常是 main)
+BASE_BRANCH="main"
 PR_URL=$(gh pr create --title "feat: $ISSUE_TITLE (Issue #${ISSUE_NUM})" \
                --body "🤖 本 PR 由 PicoClaw 自动化生成。关联 Issue #${ISSUE_NUM}" \
-               --base master --head "$BRANCH" 2>/dev/null || gh pr view --json url -q .url || echo "PR_FAILED")
+               --base "$BASE_BRANCH" --head "$BRANCH" 2>/dev/null || echo "PR_FAILED")
 
 if [[ "$PR_URL" == "PR_FAILED" ]]; then
-  log "⚠️  PR 创建失败（可能已存在），尝试获取现有 PR..."
+  log "⚠️  PR 创建失败，尝试获取现有 PR..."
   PR_URL=$(gh pr list --head "$BRANCH" --json url -q '.[0].url' || echo "NONE")
 fi
 

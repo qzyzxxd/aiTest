@@ -2,13 +2,6 @@
 """
 webhook-server.py - Gitea/GitHub Webhook 接收器
 接收 Issue 事件，触发 Agent 自动化迭代
-
-用法:
-    python3 webhook-server.py start     # 前台启动
-    python3 webhook-server.py daemon    # 后台守护进程
-    python3 webhook-server.py stop      # 停止
-    python3 webhook-server.py status    # 查看状态
-    python3 webhook-server.py restart   # 重启
 """
 import http.server
 import json
@@ -59,7 +52,8 @@ def log_event(msg: str):
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     line = f"[{ts}] {msg}"
     print(line)
-    (LOG_DIR / "webhook.log").open("a").write(line + "\n")
+    with (LOG_DIR / "webhook.log").open("a") as f:
+        f.write(line + "\n")
 
 
 def trigger_agent(issue_num: int, action: str = "opened"):
@@ -81,24 +75,19 @@ def trigger_agent(issue_num: int, action: str = "opened"):
 class WebhookHandler(http.server.BaseHTTPRequestHandler):
 
     def do_POST(self):
-        if self.path != "/webhook/gitea":
-            self.send_response(404)
-            self.end_headers()
-            return
-
         content_length = int(self.headers.get('Content-Length', 0))
         payload = self.rfile.read(content_length)
         
         # 兼容 Gitea 和 GitHub 的 Header
         signature = self.headers.get('X-Gitea-Signature') or self.headers.get('X-Hub-Signature-256', '')
         event_type = self.headers.get('X-Gitea-Event') or self.headers.get('X-GitHub-Event', '')
+        delivery_id = self.headers.get('X-GitHub-Delivery') or 'N/A'
 
         # 签名验证
         if SECRET and not verify_signature(payload, signature):
-            log_event(f"⚠️ 签名验证失败 (header: {signature}), 但在测试模式下继续执行...")
+            log_event(f"⚠️ 签名验证失败 (Delivery: {delivery_id})")
             # self.send_response(401)
             # self.end_headers()
-            # self.wfile.write(b"Invalid signature")
             # return
 
         # 解析 JSON
@@ -107,33 +96,29 @@ class WebhookHandler(http.server.BaseHTTPRequestHandler):
         except json.JSONDecodeError:
             self.send_response(400)
             self.end_headers()
-            self.wfile.write(b"Invalid JSON")
             return
 
-        log_event(f"📨 事件: {event_type}")
+        log_event(f"📨 事件: {event_type} (Delivery: {delivery_id})")
 
-        # ─── Issue 事件：新开或重新打开时触发 Agent ───
+        # ─── Issue 事件 ───
         if event_type in ("issues", "issue"):
             action = data.get("action", "")
             issue = data.get("issue", {})
             issue_num = issue.get("number")
-            labels = [l["name"] for l in issue.get("labels", [])]
-
+            
             if action in ("opened", "reopened"):
-                log_event(f"📋 Issue #{issue_num} 已创建: {issue.get('title')}")
-                log_event(f"   标签: {', '.join(labels) if labels else '无'}")
-                self.send_response(200)
+                log_event(f"📋 Issue #{issue_num} ({action}): {issue.get('title')}")
+                self.send_response(202)
                 self.end_headers()
-                self.wfile.write(b"OK - Agent triggered")
+                self.wfile.write(b"Accepted")
                 trigger_agent(issue_num, action)
                 return
 
-        # ─── PR 事件：记录日志 ───
+        # ─── PR 事件 ───
         elif event_type in ("pull_request",):
             action = data.get("action", "")
             pr = data.get("pull_request", {})
-            pr_num = pr.get("number")
-            log_event(f"🔀 PR #{pr_num}: {action}")
+            log_event(f"🔀 PR #{pr.get('number')} ({action})")
 
         self.send_response(200)
         self.end_headers()
@@ -143,30 +128,12 @@ class WebhookHandler(http.server.BaseHTTPRequestHandler):
         if self.path == "/health":
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(json.dumps({
-                "status": "ok",
-                "project": PROJECT_DIR,
-                "secret_configured": bool(SECRET),
-                "executor": EXECUTOR
-            }).encode())
-        elif self.path == "/status":
-            # 返回所有 Issue 处理状态
-            state_dir = Path(PROJECT_DIR) / "state" / "automation"
-            states = {}
-            for f in sorted(state_dir.glob("issue-*.json")):
-                try:
-                    states[f.stem] = json.loads(f.read_text())
-                except Exception:
-                    pass
-            self.send_response(200)
-            self.end_headers()
-            self.wfile.write(json.dumps(states, indent=2, ensure_ascii=False).encode())
+            self.wfile.write(json.dumps({"status": "ok", "project": PROJECT_DIR}).encode())
         else:
             self.send_response(404)
             self.end_headers()
 
     def log_message(self, format, *args):
-        """静音默认 access log"""
         pass
 
 
@@ -181,16 +148,16 @@ def start(daemon=False):
         if pid > 0:
             PID_FILE.write_text(str(pid))
             print(f"✅ Webhook 服务已后台启动 PID={pid}")
-            print(f"   地址: http://{host}:{port}/webhook/gitea")
-            print(f"   健康: http://{host}:{port}/health")
-            print(f"   状态: http://{host}:{port}/status")
-            return
+            sys.exit(0) # 父进程退出
         os.setsid()
         pid2 = os.fork()
         if pid2 > 0:
             sys.exit(0)
 
+    # 关键修复：允许端口重用
+    http.server.HTTPServer.allow_reuse_address = True
     server = http.server.HTTPServer((host, port), WebhookHandler)
+    
     PID_FILE.write_text(str(os.getpid()))
     log_event(f"🚀 Webhook 服务已启动: http://{host}:{port}/webhook/gitea")
 
@@ -208,54 +175,28 @@ def start(daemon=False):
 def stop():
     """停止 Webhook 服务"""
     if not PID_FILE.exists():
-        print("⚠️  未找到 PID 文件，服务可能未运行")
+        print("⚠️  未找到 PID 文件")
         return
     try:
         pid = int(PID_FILE.read_text().strip())
         os.kill(pid, signal.SIGTERM)
         PID_FILE.unlink(missing_ok=True)
         print(f"✅ 服务已停止 (PID={pid})")
-    except ProcessLookupError:
+    except Exception as e:
         PID_FILE.unlink(missing_ok=True)
-        print("⚠️  进程不存在，已清理 PID 文件")
-    except ValueError:
-        PID_FILE.unlink(missing_ok=True)
-        print("⚠️  PID 文件内容无效，已清理")
-
-
-def show_status():
-    """显示服务状态"""
-    if not PID_FILE.exists():
-        print("❌ 服务未运行")
-        return
-    try:
-        pid = int(PID_FILE.read_text().strip())
-        os.kill(pid, 0)
-        host = config.get("WEBHOOK_HOST", "0.0.0.0")
-        port = config.get("WEBHOOK_PORT", "9876")
-        print(f"✅ 服务运行中 PID={pid}")
-        print(f"   地址: http://{host}:{port}/webhook/gitea")
-        print(f"   健康: curl http://{host}:{port}/health")
-        print(f"   状态: curl http://{host}:{port}/status")
-    except ProcessLookupError:
-        print("❌ 服务已停止（PID 文件残留）")
-        PID_FILE.unlink(missing_ok=True)
-    except ValueError:
-        print("❌ PID 文件内容无效")
-        PID_FILE.unlink(missing_ok=True)
+        print(f"⚠️  停止失败: {e}")
 
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "start"
-    actions = {
-        "start": lambda: start(daemon=False),
-        "daemon": lambda: start(daemon=True),
-        "stop": stop,
-        "status": show_status,
-        "restart": lambda: (stop(), start(daemon=True)),
-    }
-    if cmd in actions:
-        actions[cmd]()
+    if cmd == "start":
+        start(daemon=False)
+    elif cmd == "daemon":
+        start(daemon=True)
+    elif cmd == "stop":
+        stop()
+    elif cmd == "restart":
+        stop()
+        start(daemon=True)
     else:
-        print(f"用法: {sys.argv[0]} {{start|daemon|stop|status|restart}}")
-        sys.exit(1)
+        print(f"用法: {sys.argv[0]} {{start|daemon|stop|restart}}")
